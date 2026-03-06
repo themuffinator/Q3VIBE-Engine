@@ -231,6 +231,20 @@ typedef struct {
 
 extern	refimport_t	ri;
 
+#ifdef HUNK_DEBUG
+#ifdef __cplusplus
+#define RI_HUNK_ALLOC_CALL(size, pref) Q_AllocPtr( (ri.Hunk_AllocDebug)( (size), (pref), const_cast<char *>( #size ), const_cast<char *>( __FILE__ ), __LINE__ ) )
+#else
+#define RI_HUNK_ALLOC_CALL(size, pref) (ri.Hunk_AllocDebug)( (size), (pref), #size, __FILE__, __LINE__ )
+#endif
+#else
+#ifdef __cplusplus
+#define RI_HUNK_ALLOC_CALL(size, pref) Q_AllocPtr( (ri.Hunk_Alloc)( (size), (pref) ) )
+#else
+#define RI_HUNK_ALLOC_CALL(size, pref) (ri.Hunk_Alloc)( (size), (pref) )
+#endif
+#endif
+
 // this is the only function actually exported at the linker level
 // If the module can't init to a valid rendering state, NULL will be
 // returned.

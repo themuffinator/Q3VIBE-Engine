@@ -44,6 +44,30 @@ typedef enum
 	IMGFLAG_COLORSHIFT     = 0x0200,
 } imgFlags_t;
 
+#ifdef __cplusplus
+inline imgFlags_t operator|( imgFlags_t lhs, imgFlags_t rhs ) {
+	return static_cast<imgFlags_t>( static_cast<int>( lhs ) | static_cast<int>( rhs ) );
+}
+
+inline imgFlags_t operator&( imgFlags_t lhs, imgFlags_t rhs ) {
+	return static_cast<imgFlags_t>( static_cast<int>( lhs ) & static_cast<int>( rhs ) );
+}
+
+inline imgFlags_t operator~( imgFlags_t value ) {
+	return static_cast<imgFlags_t>( ~static_cast<int>( value ) );
+}
+
+inline imgFlags_t &operator|=( imgFlags_t &lhs, imgFlags_t rhs ) {
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+inline imgFlags_t &operator&=( imgFlags_t &lhs, imgFlags_t rhs ) {
+	lhs = lhs & rhs;
+	return lhs;
+}
+#endif
+
 typedef enum {
 	CT_FRONT_SIDED = 0,
 	CT_BACK_SIDED,

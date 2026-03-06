@@ -4,6 +4,7 @@ cmake = import('cmake')
 
 sdl3_options = cmake.subproject_options()
 sdl3_options.add_cmake_defines({
+  'CMAKE_SUPPRESS_DEVELOPER_WARNINGS' : 'TRUE',
   'SDL_SHARED' : 'ON',
   'SDL_STATIC' : 'OFF',
   'SDL_TESTS' : 'OFF',

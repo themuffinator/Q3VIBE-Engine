@@ -20,6 +20,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
 
+#ifndef BOTLIB_L_MEMORY_H
+#define BOTLIB_L_MEMORY_H
+
 /*****************************************************************************
  * name:		l_memory.h
  *
@@ -32,19 +35,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //#define MEMDEBUG
 
 #ifdef MEMDEBUG
-#define GetMemory(size)				GetMemoryDebug(size, #size, __FILE__, __LINE__);
-#define GetClearedMemory(size)		GetClearedMemoryDebug(size, #size, __FILE__, __LINE__);
 //allocate a memory block of the given size
 void *GetMemoryDebug(unsigned long size, char *label, char *file, int line);
 //allocate a memory block of the given size and clear it
 void *GetClearedMemoryDebug(unsigned long size, char *label, char *file, int line);
 //
-#define GetHunkMemory(size)			GetHunkMemoryDebug(size, #size, __FILE__, __LINE__);
-#define GetClearedHunkMemory(size)	GetClearedHunkMemoryDebug(size, #size, __FILE__, __LINE__);
 //allocate a memory block of the given size
 void *GetHunkMemoryDebug(unsigned long size, char *label, char *file, int line);
 //allocate a memory block of the given size and clear it
 void *GetClearedHunkMemoryDebug(unsigned long size, char *label, char *file, int line);
+#ifdef __cplusplus
+#define GetMemory(size)				Q_AllocPtr( GetMemoryDebug(size, #size, __FILE__, __LINE__) )
+#define GetClearedMemory(size)		Q_AllocPtr( GetClearedMemoryDebug(size, #size, __FILE__, __LINE__) )
+#define GetHunkMemory(size)			Q_AllocPtr( GetHunkMemoryDebug(size, #size, __FILE__, __LINE__) )
+#define GetClearedHunkMemory(size)	Q_AllocPtr( GetClearedHunkMemoryDebug(size, #size, __FILE__, __LINE__) )
+#else
+#define GetMemory(size)				GetMemoryDebug(size, #size, __FILE__, __LINE__)
+#define GetClearedMemory(size)		GetClearedMemoryDebug(size, #size, __FILE__, __LINE__)
+#define GetHunkMemory(size)			GetHunkMemoryDebug(size, #size, __FILE__, __LINE__)
+#define GetClearedHunkMemory(size)	GetClearedHunkMemoryDebug(size, #size, __FILE__, __LINE__)
+#endif
 #else
 //allocate a memory block of the given size
 void *GetMemory(unsigned long size);
@@ -60,6 +70,12 @@ void *GetHunkMemory(unsigned long size);
 //allocate a memory block of the given size and clear it
 void *GetClearedHunkMemory(unsigned long size);
 #endif
+#ifdef __cplusplus
+#define GetMemory(size)				Q_AllocPtr( GetMemory(size) )
+#define GetClearedMemory(size)		Q_AllocPtr( GetClearedMemory(size) )
+#define GetHunkMemory(size)			Q_AllocPtr( GetHunkMemory(size) )
+#define GetClearedHunkMemory(size)	Q_AllocPtr( GetClearedHunkMemory(size) )
+#endif
 #endif
 
 //free the given memory block
@@ -74,3 +90,5 @@ void PrintMemoryLabels(void);
 int MemoryByteSize(void *ptr);
 //free all allocated memory
 void DumpMemory(void);
+
+#endif

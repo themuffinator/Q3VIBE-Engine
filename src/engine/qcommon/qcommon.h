@@ -424,7 +424,11 @@ void	VM_CheckBounds2( const vm_t *vm, unsigned int addr1, unsigned int addr2, un
 
 void	*GVM_ArgPtr( intptr_t intValue );
 
+#ifdef __cplusplus
+#define	VMA(x) Q_AllocPtr( VM_ArgPtr( args[x] ) )
+#else
 #define	VMA(x) VM_ArgPtr(args[x])
+#endif
 static ID_INLINE float _vmf(intptr_t x)
 {
 	floatint_t v;
@@ -1098,16 +1102,27 @@ temp file loading
 #endif
 
 #ifdef ZONE_DEBUG
-#define Z_TagMalloc(size, tag)			Z_TagMallocDebug(size, tag, #size, __FILE__, __LINE__)
-#define Z_Malloc(size)					Z_MallocDebug(size, #size, __FILE__, __LINE__)
-#define S_Malloc(size)					S_MallocDebug(size, #size, __FILE__, __LINE__)
 void *Z_TagMallocDebug( int size, memtag_t tag, char *label, char *file, int line );	// NOT 0 filled memory
 void *Z_MallocDebug( int size, char *label, char *file, int line );			// returns 0 filled memory
 void *S_MallocDebug( int size, char *label, char *file, int line );			// returns 0 filled memory
+#ifdef __cplusplus
+#define Z_TagMalloc(size, tag)			Q_AllocPtr( Z_TagMallocDebug(size, tag, #size, __FILE__, __LINE__) )
+#define Z_Malloc(size)					Q_AllocPtr( Z_MallocDebug(size, #size, __FILE__, __LINE__) )
+#define S_Malloc(size)					Q_AllocPtr( S_MallocDebug(size, #size, __FILE__, __LINE__) )
+#else
+#define Z_TagMalloc(size, tag)			Z_TagMallocDebug(size, tag, #size, __FILE__, __LINE__)
+#define Z_Malloc(size)					Z_MallocDebug(size, #size, __FILE__, __LINE__)
+#define S_Malloc(size)					S_MallocDebug(size, #size, __FILE__, __LINE__)
+#endif
 #else
 void *Z_TagMalloc( int size, memtag_t tag );	// NOT 0 filled memory
 void *Z_Malloc( int size );			// returns 0 filled memory
 void *S_Malloc( int size );			// NOT 0 filled memory only for small allocations
+#ifdef __cplusplus
+#define Z_TagMalloc(size, tag)			Q_AllocPtr( Z_TagMalloc(size, tag) )
+#define Z_Malloc(size)					Q_AllocPtr( Z_Malloc(size) )
+#define S_Malloc(size)					Q_AllocPtr( S_Malloc(size) )
+#endif
 #endif
 void Z_Free( void *ptr );
 int Z_FreeTags( memtag_t tag );
@@ -1123,6 +1138,10 @@ void *Hunk_AllocateTempMemory( int size );
 void Hunk_FreeTempMemory( void *buf );
 int	Hunk_MemoryRemaining( void );
 void Hunk_Log( void);
+
+#ifdef __cplusplus
+#define Hunk_AllocateTempMemory( size )	Q_AllocPtr( Hunk_AllocateTempMemory( size ) )
+#endif
 
 unsigned int Com_TouchMemory( void );
 

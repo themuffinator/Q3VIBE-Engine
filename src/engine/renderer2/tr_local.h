@@ -100,7 +100,7 @@ typedef struct {
 typedef struct {
 	vec3_t		origin;			// in world coordinates
 	vec3_t		axis[3];		// orientation in world
-	vec3_t		viewOrigin;		// viewParms->or.origin in local coordinates
+	vec3_t		viewOrigin;		// viewParms->orientation.origin in local coordinates
 	float		modelMatrix[16];
 	float		transformMatrix[16];
 } orientationr_t;
@@ -169,6 +169,12 @@ typedef enum {
 
 	SS_NEAREST			// blood blobs
 } shaderSort_t;
+
+#ifdef __cplusplus
+constexpr inline float ShaderSortValue( shaderSort_t sort ) noexcept {
+	return static_cast<float>( sort );
+}
+#endif
 
 
 #define MAX_SHADER_STAGES 8
@@ -816,7 +822,7 @@ typedef enum {
 } viewParmFlags_t;
 
 typedef struct {
-	orientationr_t	or;
+	orientationr_t orientation;
 	orientationr_t	world;
 	vec3_t		pvsOrigin;			// may be different than or.origin for portals
 	qboolean	isPortal;			// true if this view is through a portal
@@ -1456,7 +1462,7 @@ typedef struct {
 typedef struct {
 	trRefdef_t	refdef;
 	viewParms_t	viewParms;
-	orientationr_t	or;
+	orientationr_t orientation;
 	backEndCounters_t	pc;
 	qboolean	isHyperspace;
 	const trRefEntity_t *currentEntity;
@@ -1601,7 +1607,7 @@ typedef struct {
 	int						identityLightByte;	// identityLight * 255
 	int						overbrightBits;		// r_overbrightBits->integer, but set to 0 if no hw gamma
 
-	orientationr_t			or;					// for current entity
+	orientationr_t orientation;					// for current entity
 
 	trRefdef_t				refdef;
 
@@ -1890,7 +1896,7 @@ int R_CullPointAndRadius( const vec3_t origin, float radius );
 int R_CullLocalPointAndRadius( const vec3_t origin, float radius );
 
 void R_SetupProjection(viewParms_t *dest, float zProj, float zFar, qboolean computeFrustum);
-void R_RotateForEntity( const trRefEntity_t *ent, const viewParms_t *viewParms, orientationr_t *or );
+void R_RotateForEntity( const trRefEntity_t *ent, const viewParms_t *viewParms, orientationr_t *orientation );
 
 /*
 ** GL wrapper/helper functions
@@ -2112,7 +2118,7 @@ LIGHTS
 
 void R_DlightBmodel( bmodel_t *bmodel );
 void R_SetupEntityLighting( const trRefdef_t *refdef, trRefEntity_t *ent );
-void R_TransformDlights( int count, dlight_t *dl, orientationr_t *or );
+void R_TransformDlights( int count, dlight_t *dl, orientationr_t *orientation );
 int R_LightForPoint( vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir );
 int R_LightDirForPoint( vec3_t point, vec3_t lightDir, vec3_t normal, world_t *world );
 int R_CubemapForPoint( vec3_t point );

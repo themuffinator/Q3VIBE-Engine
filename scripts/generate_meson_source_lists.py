@@ -12,34 +12,34 @@ ENGINE_ROOT = "src/engine"
 
 
 GROUPS = [
-    ("botlib_sources", f"{ENGINE_ROOT}/botlib", ["*.c"], []),
-    ("client_sources", f"{ENGINE_ROOT}/client", ["*.c"], ["cl_curl.c"]),
-    ("client_curl_sources", f"{ENGINE_ROOT}/client", ["cl_curl.c"], []),
-    ("qcommon_sources", f"{ENGINE_ROOT}/qcommon", ["*.c"], ["vm_aarch64.c", "vm_armv7l.c", "vm_powerpc.c", "vm_x86.c"]),
-    ("qcommon_vm_x86_sources", f"{ENGINE_ROOT}/qcommon", ["vm_x86.c"], []),
-    ("qcommon_vm_aarch64_sources", f"{ENGINE_ROOT}/qcommon", ["vm_aarch64.c"], []),
-    ("qcommon_vm_armv7l_sources", f"{ENGINE_ROOT}/qcommon", ["vm_armv7l.c"], []),
-    ("qcommon_vm_powerpc_sources", f"{ENGINE_ROOT}/qcommon", ["vm_powerpc.c"], []),
-    ("renderer_common_sources", f"{ENGINE_ROOT}/renderercommon", ["*.c"], []),
-    ("renderer_gl_sources", f"{ENGINE_ROOT}/renderer", ["*.c"], []),
-    ("renderer2_sources", f"{ENGINE_ROOT}/renderer2", ["*.c"], ["stringify.c"]),
-    ("renderer_vk_sources", f"{ENGINE_ROOT}/renderervk", ["*.c"], ["bin2hex.c"]),
-    ("server_sources", f"{ENGINE_ROOT}/server", ["*.c"], ["sv_rankings.c"]),
-    ("unix_core_sources", f"{ENGINE_ROOT}/unix", ["unix_main.c", "unix_shared.c", "linux_signals.c"], []),
-    ("sdl_ui_sources", f"{ENGINE_ROOT}/sdl", ["*.c"], []),
-    ("win32_core_sources", f"{ENGINE_ROOT}/win32", ["win_main.c", "win_shared.c", "win_syscon.c"], []),
+    ("botlib_sources", f"{ENGINE_ROOT}/botlib", ["*.cpp"], []),
+    ("client_sources", f"{ENGINE_ROOT}/client", ["*.cpp"], ["cl_curl.cpp"]),
+    ("client_curl_sources", f"{ENGINE_ROOT}/client", ["cl_curl.cpp"], []),
+    ("qcommon_sources", f"{ENGINE_ROOT}/qcommon", ["*.cpp"], ["vm_aarch64.cpp", "vm_armv7l.cpp", "vm_powerpc.cpp", "vm_x86.cpp"]),
+    ("qcommon_vm_x86_sources", f"{ENGINE_ROOT}/qcommon", ["vm_x86.cpp"], []),
+    ("qcommon_vm_aarch64_sources", f"{ENGINE_ROOT}/qcommon", ["vm_aarch64.cpp"], []),
+    ("qcommon_vm_armv7l_sources", f"{ENGINE_ROOT}/qcommon", ["vm_armv7l.cpp"], []),
+    ("qcommon_vm_powerpc_sources", f"{ENGINE_ROOT}/qcommon", ["vm_powerpc.cpp"], []),
+    ("renderer_common_sources", f"{ENGINE_ROOT}/renderercommon", ["*.cpp"], []),
+    ("renderer_gl_sources", f"{ENGINE_ROOT}/renderer", ["*.cpp"], []),
+    ("renderer2_sources", f"{ENGINE_ROOT}/renderer2", ["*.cpp"], ["stringify.cpp"]),
+    ("renderer_vk_sources", f"{ENGINE_ROOT}/renderervk", ["*.cpp"], ["bin2hex.cpp"]),
+    ("server_sources", f"{ENGINE_ROOT}/server", ["*.cpp"], ["sv_rankings.cpp"]),
+    ("unix_core_sources", f"{ENGINE_ROOT}/unix", ["unix_main.cpp", "unix_shared.cpp", "linux_signals.cpp"], []),
+    ("sdl_ui_sources", f"{ENGINE_ROOT}/sdl", ["*.cpp"], []),
+    ("win32_core_sources", f"{ENGINE_ROOT}/win32", ["win_main.cpp", "win_shared.cpp", "win_syscon.cpp"], []),
     (
         "win32_ui_sources",
         f"{ENGINE_ROOT}/win32",
-        ["win_gamma.c", "win_glimp.c", "win_input.c", "win_minimize.c", "win_snd.c", "win_wndproc.c"],
+        ["win_gamma.cpp", "win_glimp.cpp", "win_input.cpp", "win_minimize.cpp", "win_snd.cpp", "win_wndproc.cpp"],
         [],
     ),
-    ("win32_qgl_sources", f"{ENGINE_ROOT}/win32", ["win_qgl.c"], []),
-    ("win32_qvk_sources", f"{ENGINE_ROOT}/win32", ["win_qvk.c"], []),
+    ("win32_qgl_sources", f"{ENGINE_ROOT}/win32", ["win_qgl.cpp"], []),
+    ("win32_qvk_sources", f"{ENGINE_ROOT}/win32", ["win_qvk.cpp"], []),
 ]
 
 FILE_LIST_GROUPS = [
-    ("renderer_shared_aux_sources", [f"{ENGINE_ROOT}/qcommon/puff.c", f"{ENGINE_ROOT}/qcommon/q_math.c", f"{ENGINE_ROOT}/qcommon/q_shared.c"]),
+    ("renderer_shared_aux_sources", [f"{ENGINE_ROOT}/qcommon/puff.cpp", f"{ENGINE_ROOT}/qcommon/q_math.cpp", f"{ENGINE_ROOT}/qcommon/q_shared.cpp"]),
 ]
 
 STRING_LIST_GROUPS = [

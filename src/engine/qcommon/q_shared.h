@@ -94,14 +94,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define UNUSED_VAR
 #endif
 
-#if (defined _MSC_VER)
-#define Q_EXPORT __declspec(dllexport)
-#elif (defined __SUNPRO_C)
-#define Q_EXPORT __global
-#elif ((__GNUC__ >= 3) && (!__EMX__) && (!sun))
-#define Q_EXPORT __attribute__((visibility("default")))
+#ifdef __cplusplus
+#define Q_EXTERN_C extern "C"
 #else
-#define Q_EXPORT
+#define Q_EXTERN_C
+#endif
+
+#if (defined _MSC_VER)
+#define Q_EXPORT Q_EXTERN_C __declspec(dllexport)
+#elif (defined __SUNPRO_C)
+#define Q_EXPORT Q_EXTERN_C __global
+#elif ((__GNUC__ >= 3) && (!__EMX__) && (!sun))
+#define Q_EXPORT Q_EXTERN_C __attribute__((visibility("default")))
+#else
+#define Q_EXPORT Q_EXTERN_C
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
@@ -219,7 +225,31 @@ int Q_longjmp_c(void *, int);
 
 typedef unsigned char byte;
 
-typedef enum { qfalse = 0, qtrue } qboolean;
+typedef int qboolean;
+enum { qfalse = 0, qtrue = 1 };
+
+#ifdef __cplusplus
+struct q_alloc_ptr_t {
+	void *ptr;
+
+	template <typename T>
+	constexpr operator T *() const noexcept {
+		return static_cast<T *>(ptr);
+	}
+
+	constexpr operator void *() const noexcept {
+		return ptr;
+	}
+};
+
+constexpr inline q_alloc_ptr_t Q_AllocPtr( void *ptr ) noexcept {
+	return { ptr };
+}
+
+constexpr inline q_alloc_ptr_t Q_AllocPtr( q_alloc_ptr_t ptr ) noexcept {
+	return ptr;
+}
+#endif
 
 typedef union floatint_u
 {
@@ -244,7 +274,11 @@ typedef int		clipHandle_t;
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
 
+#ifdef __cplusplus
+#define PADP(base, alignment)	Q_AllocPtr( (void *) PAD((intptr_t) (base), (alignment)) )
+#else
 #define PADP(base, alignment)	((void *) PAD((intptr_t) (base), (alignment)))
+#endif
 
 #ifdef __GNUC__
 #define QALIGN(x) __attribute__((aligned(x)))
@@ -368,10 +402,17 @@ typedef enum {
 } ha_pref;
 
 #ifdef HUNK_DEBUG
-#define Hunk_Alloc( size, preference )				Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__)
 void *Hunk_AllocDebug( int size, ha_pref preference, char *label, char *file, int line );
+#ifdef __cplusplus
+#define Hunk_Alloc( size, preference )				Q_AllocPtr( Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__) )
+#else
+#define Hunk_Alloc( size, preference )				Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__)
+#endif
 #else
 void *Hunk_Alloc( int size, ha_pref preference );
+#ifdef __cplusplus
+#define Hunk_Alloc( size, preference )				Q_AllocPtr( Hunk_Alloc(size, preference) )
+#endif
 #endif
 
 #if defined(__GNUC__) && !defined(__MINGW32__) && !defined(MACOS_X)

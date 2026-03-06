@@ -461,7 +461,7 @@ char *G_NewString( const char *string );
 //
 void Cmd_Score_f (gentity_t *ent);
 void StopFollowing( gentity_t *ent, qboolean release );
-void BroadcastTeamChange( gclient_t *client, team_t oldTeam );
+void BroadcastTeamChange( gclient_t *client, int oldTeam );
 qboolean SetTeam( gentity_t *ent, const char *s );
 void Cmd_FollowCycle_f( gentity_t *ent, int dir );
 void G_RevertVote( gclient_t *client );
@@ -496,7 +496,7 @@ int		G_ModelIndex( const char *name );
 int		G_SoundIndex( const char *name );
 void	G_TeamCommand( team_t team, const char *cmd );
 void	G_KillBox (gentity_t *ent);
-gentity_t *G_Find (gentity_t *from, int fieldofs, const char *match);
+gentity_t *G_Find (gentity_t *from, intptr_t fieldofs, const char *match);
 gentity_t *G_PickTarget (const char *targetname);
 void	G_UseTargets (gentity_t *ent, gentity_t *activator);
 void	G_SetMovedir ( vec3_t angles, vec3_t movedir);
@@ -675,6 +675,9 @@ void Team_ResetFlags( void );
 // g_mem.c
 //
 void *G_Alloc( size_t size );
+#ifdef __cplusplus
+#define G_Alloc(size) Q_AllocPtr( G_Alloc( size ) )
+#endif
 void G_InitMemory( void );
 void Svcmd_GameMem_f( void );
 
@@ -976,4 +979,3 @@ extern int dll_com_trapGetValue;
 #endif
 
 extern	int svf_self_portal2;
-

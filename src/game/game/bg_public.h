@@ -518,9 +518,9 @@ extern	gitem_t	bg_itemlist[];
 extern	int		bg_numItems;
 
 gitem_t	*BG_FindItem( const char *pickupName );
-gitem_t	*BG_FindItemForWeapon( weapon_t weapon );
-gitem_t	*BG_FindItemForPowerup( powerup_t pw );
-gitem_t	*BG_FindItemForHoldable( holdable_t pw );
+gitem_t	*BG_FindItemForWeapon( int weapon );
+gitem_t	*BG_FindItemForPowerup( int pw );
+gitem_t	*BG_FindItemForHoldable( int pw );
 #define	ITEM_INDEX(x) ((x)-bg_itemlist)
 
 qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const playerState_t *ps );
@@ -573,7 +573,7 @@ typedef enum {
 void	BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result );
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );
 
-void	BG_AddPredictableEventToPlayerstate( entity_event_t newEvent, int eventParm, playerState_t *ps, int entityNum );
+void	BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerState_t *ps, int entityNum );
 
 void	BG_TouchJumpPad( playerState_t *ps, entityState_t *jumppad );
 

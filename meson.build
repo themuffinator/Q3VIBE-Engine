@@ -1,11 +1,12 @@
 project(
   'q3vibe-engine',
-  'c',
+  'c', 'cpp',
   version : '0.1.0',
   license : 'GPL-3.0-or-later',
   meson_version : '>=1.3.0',
   default_options : [
     'warning_level=1',
+    'cpp_std=c++20',
     'b_vscrt=static_from_buildtype',
     'default_library=static',
   ],
@@ -32,6 +33,7 @@ if is_unix and not (cpu_family == 'x86_64' or cpu_family == 'aarch64')
 endif
 
 cc = meson.get_compiler('c')
+cpp = meson.get_compiler('cpp')
 python = import('python').find_installation(required : true)
 
 if is_windows
@@ -104,20 +106,42 @@ endif
 binext = '.' + exe_arch_suffix
 renderer_prefix_define = '-DRENDERER_PREFIX="@0@"'.format(renderer_prefix)
 
-project_c_args = []
+project_compile_args = []
 if is_windows
-  project_c_args += [
+  project_compile_args += [
     '-D_CRT_SECURE_NO_WARNINGS',
     '-D_CRT_SECURE_NO_DEPRECATE',
     '-D_WINSOCK_DEPRECATED_NO_WARNINGS',
+    '-DCINTERFACE',
+    '-DCOBJMACROS',
   ]
 endif
 if is_darwin
-  project_c_args += ['-DMACOS_X']
+  project_compile_args += ['-DMACOS_X']
 endif
 
-if project_c_args.length() > 0
-  add_project_arguments(project_c_args, language : 'c')
+project_cpp_compile_args = []
+foreach arg : [
+  '-fno-operator-names',
+  '-Wno-write-strings',
+  '-Wno-literal-suffix',
+  '-Wno-sign-compare',
+  '-Wno-writable-strings',
+  '-Wno-deprecated-register',
+  '-Wno-reserved-user-defined-literal',
+  '-Wno-microsoft-cast',
+]
+  if cpp.has_argument(arg)
+    project_cpp_compile_args += [arg]
+  endif
+endforeach
+
+if project_compile_args.length() > 0
+  add_project_arguments(project_compile_args, language : 'c')
+  add_project_arguments(project_compile_args, language : 'cpp')
+endif
+if project_cpp_compile_args.length() > 0
+  add_project_arguments(project_cpp_compile_args, language : 'cpp')
 endif
 
 engine_source_root = 'src/engine'
@@ -277,6 +301,7 @@ botlib = static_library(
   botlib_sources,
   include_directories : engine_includes,
   c_args : ['-DBOTLIB'],
+  cpp_args : ['-DBOTLIB'],
 )
 
 qcommon_client = static_library(
@@ -290,6 +315,7 @@ qcommon_ded = static_library(
   qcommon_sources + qcommon_vm_arch_sources + server_sources,
   include_directories : engine_includes,
   c_args : ['-DDEDICATED'],
+  cpp_args : ['-DDEDICATED'],
 )
 
 client_defines = [
@@ -315,6 +341,7 @@ client_lib = static_library(
   client_all_sources,
   include_directories : engine_includes,
   c_args : client_defines,
+  cpp_args : client_defines,
   dependencies : client_external_deps,
 )
 
@@ -323,6 +350,7 @@ q3ui = static_library(
   platform_ui_sources,
   include_directories : engine_includes,
   c_args : q3ui_defines,
+  cpp_args : q3ui_defines,
   dependencies : q3ui_build_deps,
 )
 
@@ -336,6 +364,7 @@ if build_opengl
       renderer_gl_sources + renderer_base_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args,
+      cpp_args : renderer_common_args,
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -345,6 +374,7 @@ if build_opengl
       renderer_gl_sources + renderer_base_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args,
+      cpp_args : renderer_common_args,
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -358,6 +388,7 @@ if build_vulkan
       renderer_vk_sources + renderer_base_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args,
+      cpp_args : renderer_common_args,
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -367,6 +398,7 @@ if build_vulkan
       renderer_vk_sources + renderer_base_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args,
+      cpp_args : renderer_common_args,
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -380,7 +412,7 @@ if build_opengl2
     renderer2_stringified_sources += custom_target(
       'renderer2_' + shader_name,
       input : shader,
-      output : shader_name + '.c',
+      output : shader_name + '.cpp',
       command : [python, files('scripts/stringify_glsl.py'), '@INPUT@', '@OUTPUT@', shader_name],
     )
   endforeach
@@ -391,6 +423,7 @@ if build_opengl2
       renderer2_sources + renderer_base_sources + renderer2_stringified_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args + ['-DUSE_RENDERER2'],
+      cpp_args : renderer_common_args + ['-DUSE_RENDERER2'],
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -400,6 +433,7 @@ if build_opengl2
       renderer2_sources + renderer_base_sources + renderer2_stringified_sources,
       include_directories : engine_includes,
       c_args : renderer_common_args + ['-DUSE_RENDERER2'],
+      cpp_args : renderer_common_args + ['-DUSE_RENDERER2'],
       dependencies : renderer_platform_deps,
       name_prefix : '',
     )
@@ -434,6 +468,7 @@ if is_windows
     platform_core_sources + platform_resource_sources,
     include_directories : engine_includes,
     c_args : ['-DDEDICATED'],
+    cpp_args : ['-DDEDICATED'],
     link_with : dedicated_link_with,
     dependencies : common_platform_deps,
     name_prefix : '',
@@ -454,6 +489,7 @@ else
     platform_core_sources,
     include_directories : engine_includes,
     c_args : ['-DDEDICATED'],
+    cpp_args : ['-DDEDICATED'],
     link_with : dedicated_link_with,
     dependencies : common_platform_deps,
     name_prefix : '',

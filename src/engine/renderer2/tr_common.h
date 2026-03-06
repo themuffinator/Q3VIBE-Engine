@@ -50,6 +50,30 @@ typedef enum
 	IMGFLAG_CLAMPTOBORDER  = 0x0400,
 } imgFlags_t;
 
+#ifdef __cplusplus
+inline imgFlags_t operator|( imgFlags_t lhs, imgFlags_t rhs ) {
+	return static_cast<imgFlags_t>( static_cast<int>( lhs ) | static_cast<int>( rhs ) );
+}
+
+inline imgFlags_t operator&( imgFlags_t lhs, imgFlags_t rhs ) {
+	return static_cast<imgFlags_t>( static_cast<int>( lhs ) & static_cast<int>( rhs ) );
+}
+
+inline imgFlags_t operator~( imgFlags_t value ) {
+	return static_cast<imgFlags_t>( ~static_cast<int>( value ) );
+}
+
+inline imgFlags_t &operator|=( imgFlags_t &lhs, imgFlags_t rhs ) {
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+inline imgFlags_t &operator&=( imgFlags_t &lhs, imgFlags_t rhs ) {
+	lhs = lhs & rhs;
+	return lhs;
+}
+#endif
+
 typedef struct image_s {
 	char		*imgName;			// image path, including extension
 	struct image_s *next;			// for hash search

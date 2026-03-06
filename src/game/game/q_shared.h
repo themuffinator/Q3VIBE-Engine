@@ -56,9 +56,17 @@
 
 #ifndef _WIN32
 #include <stdint.h>
+#ifdef __cplusplus
+#define DLLEXPORT extern "C" __attribute__((visibility ("default")))
+#else
 #define DLLEXPORT __attribute__((visibility ("default")))
+#endif
+#else
+#ifdef __cplusplus
+#define DLLEXPORT extern "C" __declspec(dllexport)
 #else
 #define DLLEXPORT __declspec(dllexport)
+#endif
 #endif // _WIN32
 
 #endif // !Q3_VM
@@ -119,7 +127,27 @@
 
 typedef unsigned char 		byte;
 
-typedef enum { qfalse = 0, qtrue } qboolean;
+typedef int qboolean;
+enum { qfalse = 0, qtrue = 1 };
+
+#ifdef __cplusplus
+struct q_alloc_ptr_t {
+	void *ptr;
+
+	template <typename T>
+	constexpr operator T *() const noexcept {
+		return static_cast<T *>(ptr);
+	}
+
+	constexpr operator void *() const noexcept {
+		return ptr;
+	}
+};
+
+constexpr inline q_alloc_ptr_t Q_AllocPtr( void *ptr ) noexcept {
+	return { ptr };
+}
+#endif
 
 typedef int		qhandle_t;
 typedef int		sfxHandle_t;
@@ -142,6 +170,12 @@ typedef int		clipHandle_t;
 
 #define ARRAY_LEN(x)		(sizeof(x) / sizeof(*(x)))
 #define STRARRAY_LEN(x)		(ARRAY_LEN(x) - 1)
+
+#ifdef __cplusplus
+#define PADP(base, alignment)	Q_AllocPtr( (void *) ((((size_t)(base)) + (alignment) - 1) & ~((alignment) - 1)) )
+#else
+#define PADP(base, alignment)	((void *) ((((size_t)(base)) + (alignment) - 1) & ~((alignment) - 1)))
+#endif
 
 // angle indexes
 #define	PITCH				0		// up / down
@@ -245,10 +279,17 @@ typedef enum {
 } ha_pref;
 
 #ifdef HUNK_DEBUG
-#define Hunk_Alloc( size, preference )				Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__)
 void *Hunk_AllocDebug( int size, ha_pref preference, char *label, char *file, int line );
+#ifdef __cplusplus
+#define Hunk_Alloc( size, preference )				Q_AllocPtr( Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__) )
+#else
+#define Hunk_Alloc( size, preference )				Hunk_AllocDebug(size, preference, #size, __FILE__, __LINE__)
+#endif
 #else
 void *Hunk_Alloc( int size, ha_pref preference );
+#ifdef __cplusplus
+#define Hunk_Alloc( size, preference )				Q_AllocPtr( Hunk_Alloc(size, preference) )
+#endif
 #endif
 
 #define Com_Memset memset

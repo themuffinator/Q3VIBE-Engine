@@ -47,7 +47,7 @@
 
 // Prototypes
 
-int OtherTeam( team_t team );
+team_t OtherTeam( team_t team );
 const char *TeamName( team_t team );
 const char *OtherTeamName( team_t team );
 const char *TeamColorString( team_t team );
