@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "meson.build": "meson",
+    "*.build": "meson"
+  },
+  "task.quickOpen.history": 10
+}

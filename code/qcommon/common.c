@@ -3280,7 +3280,7 @@ static uint64_t affinityMask; // saved at startup
 
 #if (idx64 || id386)
 
-#if defined _MSC_VER
+#if defined _MSC_VER && !defined(__clang__)
 #include <intrin.h>
 static void CPUID( int func, unsigned int *regs )
 {
@@ -3539,7 +3539,7 @@ static void Sys_GetProcessorId( char *vendor )
 Sys_SnapVector
 ================
 */
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #if idx64
 void Sys_SnapVector( float *vector )
 {

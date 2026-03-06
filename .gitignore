@@ -1,7 +1,10 @@
 build/
 output/
 .vs/
-.vscode/
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/settings.json
 *.user
 cmake-*
 .idea

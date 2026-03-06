@@ -1,0 +1,49 @@
+option(
+  'use_curl',
+  type : 'boolean',
+  value : true,
+  description : 'Enable libcurl-backed autodownload support.',
+)
+
+option(
+  'use_ogg_vorbis',
+  type : 'boolean',
+  value : true,
+  description : 'Enable OGG/Vorbis audio playback support.',
+)
+
+option(
+  'use_sdl',
+  type : 'feature',
+  value : 'auto',
+  description : 'Use the SDL-backed platform layer. Auto enables it on Linux/macOS and keeps the native Win32 path on Windows.',
+)
+
+option(
+  'build_opengl',
+  type : 'boolean',
+  value : true,
+  description : 'Build the classic OpenGL renderer DLL.',
+)
+
+option(
+  'build_vulkan',
+  type : 'boolean',
+  value : true,
+  description : 'Build the Vulkan renderer DLL.',
+)
+
+option(
+  'build_opengl2',
+  type : 'boolean',
+  value : false,
+  description : 'Build the legacy OpenGL2 renderer DLL.',
+)
+
+option(
+  'default_renderer',
+  type : 'combo',
+  choices : ['opengl', 'vulkan', 'opengl2'],
+  value : 'opengl',
+  description : 'Default renderer selected by cl_renderer on first run.',
+)

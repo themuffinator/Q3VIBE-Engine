@@ -194,8 +194,12 @@ void CopyLongSwap( void *dest, void *src );
 #endif
 
 #if defined (_WIN32)
-#if !defined(_MSC_VER)
-// use GCC/Clang functions
+#if defined(__clang__) && defined(_WIN32)
+  // clang-cl is closer to the generic path than the custom MSVC x64 assembly path
+#define Q_setjmp setjmp
+#define Q_longjmp longjmp
+#elif !defined(_MSC_VER)
+  // use GCC/Clang builtins
 #define Q_setjmp __builtin_setjmp
 #define Q_longjmp __builtin_longjmp
 #elif idx64 && (_MSC_VER >= 1910)

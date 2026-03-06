@@ -1,0 +1,265 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Configure Debug",
+      "type": "shell",
+      "command": "meson setup build/windows-clangcl-debug --native-file toolchains/windows-clangcl.ini --buildtype debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "command": "if (Test-Path 'build/windows-clangcl-debug/build.ninja') { meson setup build/windows-clangcl-debug --reconfigure } else { meson setup build/windows-clangcl-debug --native-file toolchains/windows-clangcl.ini --buildtype debug }",
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "if [ -f build/linux-debug/build.ninja ]; then meson setup build/linux-debug --reconfigure; else meson setup build/linux-debug --buildtype debug; fi",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "if [ -f build/macos-debug/build.ninja ]; then meson setup build/macos-debug --reconfigure; else meson setup build/macos-debug --buildtype debug; fi",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Debug",
+      "type": "shell",
+      "command": "meson compile -C build/windows-clangcl-debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "meson compile -C build/linux-debug",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "meson compile -C build/macos-debug",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "dependsOn": "Configure Debug",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Configure Release",
+      "type": "shell",
+      "command": "meson setup build/windows-clangcl-release --native-file toolchains/windows-clangcl.ini --buildtype release",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "command": "if (Test-Path 'build/windows-clangcl-release/build.ninja') { meson setup build/windows-clangcl-release --reconfigure } else { meson setup build/windows-clangcl-release --native-file toolchains/windows-clangcl.ini --buildtype release }",
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "if [ -f build/linux-release/build.ninja ]; then meson setup build/linux-release --reconfigure; else meson setup build/linux-release --buildtype release; fi",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "if [ -f build/macos-release/build.ninja ]; then meson setup build/macos-release --reconfigure; else meson setup build/macos-release --buildtype release; fi",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Release",
+      "type": "shell",
+      "command": "meson compile -C build/windows-clangcl-release",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "meson compile -C build/linux-release",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "meson compile -C build/macos-release",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "dependsOn": "Configure Release",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Debug",
+      "type": "shell",
+      "command": "meson compile -C build/windows-clangcl-debug --clean",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "meson compile -C build/linux-debug --clean",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "meson compile -C build/macos-debug --clean",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean Release",
+      "type": "shell",
+      "command": "meson compile -C build/windows-clangcl-release --clean",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "pwsh",
+            "args": [
+              "-NoProfile",
+              "-Command"
+            ]
+          }
+        }
+      },
+      "linux": {
+        "command": "meson compile -C build/linux-release --clean",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "osx": {
+        "command": "meson compile -C build/macos-release --clean",
+        "options": {
+          "shell": {
+            "executable": "bash",
+            "args": [
+              "-lc"
+            ]
+          }
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
