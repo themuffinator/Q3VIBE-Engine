@@ -1,16 +1,19 @@
-# Q3VIBE Engine
+# Q3VIBE
 
-Q3VIBE Engine is an ultra-developed Quake 3 engine fork built on top of Quake3e. The repository now uses a Meson/Ninja build as the active build system, with the imported upstream documentation and legacy build entry points preserved under `archive/`.
+Q3VIBE is a Quake 3 codebase project built on top of Quake3e. Despite the historical repository name, this is not an engine-only tree: the active project includes the engine, renderer modules, native `baseq3a` game modules, and the Meson/Ninja build and runtime integration that ties them together. Imported upstream documentation and legacy build entry points are preserved under `archive/`.
 
 ## Project Features So Far
 
-- Modern build tools
-- SDL3
+- Cross-platform Meson/Ninja build
+- Full native C++20 rewrite of the project-owned engine and game source tree
+- Native `baseq3a` game modules built alongside the client and dedicated server
+- OpenGL and Vulkan renderer modules
+- SDL3 platform layer support on Linux and macOS
 
 ## Project Goals
 
-- Use Quake3e as a practical upstream base for ongoing engine work.
-- Expand the engine with more ambitious rendering, platform, tooling, and runtime improvements.
+- Use Quake3e as a practical upstream base for ongoing engine and game-side work.
+- Expand the engine, renderer, platform, tooling, and bundled runtime modules with more ambitious improvements.
 - Treat full Windows, Linux, and macOS support as a core engineering requirement, not a later portability pass.
 - Keep Meson/Ninja, dependency wrappers, CI, and editor tooling aligned so cross-platform support stays continuously buildable and testable.
 - Preserve useful Quake 3 compatibility where it does not block forward development.
@@ -118,14 +121,15 @@ Expected outputs:
 ## Repository Layout
 
 - `src/engine/`: engine, renderer, platform, and Quake3e-facing source tree.
-- `src/game/`: vendored `baseq3a` gamecode plus its upstream docs, assets, and license files.
+- `src/game/`: active native `baseq3a` game-module source tree plus its upstream docs, assets, and license files.
 - `baseq3a/`: Meson staging directory that mirrors the built native `baseq3a` modules into `build/<config>/baseq3a/`.
 - `meson.build`, `meson.options`: active top-level build definition.
+- `src/game/meson.build`: active Meson build definition for the bundled `baseq3a` game modules.
 - `subprojects/`: Meson dependency wrappers and vendored external dependency trees for `libjpeg`, `libogg`, `libvorbis`, `libcurl`, and SDL3, following the same fallback-driven layout used in `../WORR/`.
 - `subprojects/sdl3/`: the active SDL3 Meson wrapper.
 - `subprojects/sdl3-upstream/`: the vendored SDL 3.4.2 source tree consumed by the SDL3 wrapper.
 - `toolchains/`: checked-in Meson native files.
-- `build-support/meson/sources/meson.build`: generated source manifest used by Meson for engine sources only.
+- `build-support/meson/sources/meson.build`: generated source manifest used by Meson for the project-owned engine tree; game-module source lists are maintained in `src/game/meson.build`.
 - `scripts/`: Meson maintenance helpers, including source-list and GLSL string generation.
 - `.github/workflows/build.yml`: cross-platform Meson CI for Windows, Linux, and macOS runners.
 - `archive/documents/`: archived upstream documentation.
@@ -139,6 +143,6 @@ Third-party bundled components keep their own notices under the imported source 
 
 ## Upstream Credits
 
-Q3VIBE Engine is based on [Quake3e](https://github.com/ec-/Quake3e), imported from upstream commit `46add7d` from `upstream/main` on March 6, 2026.
+Q3VIBE is based on [Quake3e](https://github.com/ec-/Quake3e), imported from upstream commit `46add7d` from `upstream/main` on March 6, 2026.
 
 Quake3e is itself derived from the Quake III Arena source release by id Software. The original upstream README, build notes, and license text are preserved in `archive/documents/`.
