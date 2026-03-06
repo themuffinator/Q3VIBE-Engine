@@ -46,6 +46,8 @@ default_renderer = get_option('default_renderer')
 build_opengl = get_option('build_opengl')
 build_vulkan = get_option('build_vulkan')
 build_opengl2 = get_option('build_opengl2')
+build_game_modules = get_option('build_game_modules')
+build_baseq3a = build_game_modules and get_option('build_baseq3a')
 use_curl = get_option('use_curl')
 use_ogg_vorbis = get_option('use_ogg_vorbis')
 use_sdl_opt = get_option('use_sdl')
@@ -79,6 +81,7 @@ endif
 
 render_arch_string = ''
 exe_arch_suffix = ''
+game_module_ext = '.so'
 
 if cpu_family == 'x86_64'
   render_arch_string = 'x86_64'
@@ -90,6 +93,12 @@ if cpu_family == 'x86_64'
 elif cpu_family == 'aarch64'
   render_arch_string = 'aarch64'
   exe_arch_suffix = 'aarch64'
+endif
+
+if is_windows
+  game_module_ext = '.dll'
+elif is_darwin
+  game_module_ext = '.dylib'
 endif
 
 binext = '.' + exe_arch_suffix
@@ -111,40 +120,42 @@ if project_c_args.length() > 0
   add_project_arguments(project_c_args, language : 'c')
 endif
 
+engine_source_root = 'src/engine'
+
 if is_windows
   engine_includes = include_directories(
-    'code',
-    'code/asm',
-    'code/botlib',
-    'code/client',
-    'code/game',
-    'code/qcommon',
-    'code/renderer',
-    'code/renderer2',
-    'code/renderercommon',
-    'code/renderercommon/vulkan',
-    'code/renderervk',
-    'code/server',
-    'code/ui',
-    'code/win32',
+    engine_source_root,
+    join_paths(engine_source_root, 'asm'),
+    join_paths(engine_source_root, 'botlib'),
+    join_paths(engine_source_root, 'client'),
+    join_paths(engine_source_root, 'game'),
+    join_paths(engine_source_root, 'qcommon'),
+    join_paths(engine_source_root, 'renderer'),
+    join_paths(engine_source_root, 'renderer2'),
+    join_paths(engine_source_root, 'renderercommon'),
+    join_paths(engine_source_root, 'renderercommon/vulkan'),
+    join_paths(engine_source_root, 'renderervk'),
+    join_paths(engine_source_root, 'server'),
+    join_paths(engine_source_root, 'ui'),
+    join_paths(engine_source_root, 'win32'),
   )
 else
   engine_includes = include_directories(
-    'code',
-    'code/asm',
-    'code/botlib',
-    'code/client',
-    'code/game',
-    'code/qcommon',
-    'code/renderer',
-    'code/renderer2',
-    'code/renderercommon',
-    'code/renderercommon/vulkan',
-    'code/renderervk',
-    'code/server',
-    'code/ui',
-    'code/unix',
-    'code/sdl',
+    engine_source_root,
+    join_paths(engine_source_root, 'asm'),
+    join_paths(engine_source_root, 'botlib'),
+    join_paths(engine_source_root, 'client'),
+    join_paths(engine_source_root, 'game'),
+    join_paths(engine_source_root, 'qcommon'),
+    join_paths(engine_source_root, 'renderer'),
+    join_paths(engine_source_root, 'renderer2'),
+    join_paths(engine_source_root, 'renderercommon'),
+    join_paths(engine_source_root, 'renderercommon/vulkan'),
+    join_paths(engine_source_root, 'renderervk'),
+    join_paths(engine_source_root, 'server'),
+    join_paths(engine_source_root, 'ui'),
+    join_paths(engine_source_root, 'unix'),
+    join_paths(engine_source_root, 'sdl'),
   )
 endif
 
@@ -182,7 +193,7 @@ if is_windows
   renderer_platform_deps = common_platform_deps
   platform_core_sources = win32_core_sources
   platform_ui_sources = win32_ui_sources
-  platform_resource_sources = [windows_mod.compile_resources('code/win32/win_resource.rc')]
+  platform_resource_sources = [windows_mod.compile_resources(join_paths(engine_source_root, 'win32/win_resource.rc'))]
 
   if build_opengl or build_opengl2
     platform_ui_sources += win32_qgl_sources
@@ -233,7 +244,7 @@ if is_unix and cpu_family == 'x86_64'
 
   client_runtime_sources += custom_target(
     'snd_mix_x86_64',
-    input : 'code/asm/snd_mix_x86_64.s',
+    input : join_paths(engine_source_root, 'asm/snd_mix_x86_64.s'),
     output : 'snd_mix_x86_64.o',
     command : [unix_asm_compiler] + unix_asm_args + ['-c', '@INPUT@', '-o', '@OUTPUT@'],
   )
@@ -449,6 +460,11 @@ else
   )
 endif
 
+if build_baseq3a
+  subdir('src/game')
+  subdir('baseq3a')
+endif
+
 summary(
   {
     'Platform' : system_name + ' ' + cpu_family,
@@ -457,6 +473,8 @@ summary(
     'SDL backend' : platform_use_sdl,
     'libcurl' : use_curl,
     'OGG/Vorbis' : use_ogg_vorbis,
+    'Game modules' : build_game_modules,
+    'baseq3a game modules' : build_baseq3a,
     'OpenGL renderer' : build_opengl,
     'Vulkan renderer' : build_vulkan,
     'OpenGL2 renderer' : build_opengl2,

@@ -8,37 +8,38 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "build-support" / "meson" / "sources" / "meson.build"
 OUT_BASE = OUT.parent
+ENGINE_ROOT = "src/engine"
 
 
 GROUPS = [
-    ("botlib_sources", "code/botlib", ["*.c"], []),
-    ("client_sources", "code/client", ["*.c"], ["cl_curl.c"]),
-    ("client_curl_sources", "code/client", ["cl_curl.c"], []),
-    ("qcommon_sources", "code/qcommon", ["*.c"], ["vm_aarch64.c", "vm_armv7l.c", "vm_powerpc.c", "vm_x86.c"]),
-    ("qcommon_vm_x86_sources", "code/qcommon", ["vm_x86.c"], []),
-    ("qcommon_vm_aarch64_sources", "code/qcommon", ["vm_aarch64.c"], []),
-    ("qcommon_vm_armv7l_sources", "code/qcommon", ["vm_armv7l.c"], []),
-    ("qcommon_vm_powerpc_sources", "code/qcommon", ["vm_powerpc.c"], []),
-    ("renderer_common_sources", "code/renderercommon", ["*.c"], []),
-    ("renderer_gl_sources", "code/renderer", ["*.c"], []),
-    ("renderer2_sources", "code/renderer2", ["*.c"], ["stringify.c"]),
-    ("renderer_vk_sources", "code/renderervk", ["*.c"], ["bin2hex.c"]),
-    ("server_sources", "code/server", ["*.c"], ["sv_rankings.c"]),
-    ("unix_core_sources", "code/unix", ["unix_main.c", "unix_shared.c", "linux_signals.c"], []),
-    ("sdl_ui_sources", "code/sdl", ["*.c"], []),
-    ("win32_core_sources", "code/win32", ["win_main.c", "win_shared.c", "win_syscon.c"], []),
+    ("botlib_sources", f"{ENGINE_ROOT}/botlib", ["*.c"], []),
+    ("client_sources", f"{ENGINE_ROOT}/client", ["*.c"], ["cl_curl.c"]),
+    ("client_curl_sources", f"{ENGINE_ROOT}/client", ["cl_curl.c"], []),
+    ("qcommon_sources", f"{ENGINE_ROOT}/qcommon", ["*.c"], ["vm_aarch64.c", "vm_armv7l.c", "vm_powerpc.c", "vm_x86.c"]),
+    ("qcommon_vm_x86_sources", f"{ENGINE_ROOT}/qcommon", ["vm_x86.c"], []),
+    ("qcommon_vm_aarch64_sources", f"{ENGINE_ROOT}/qcommon", ["vm_aarch64.c"], []),
+    ("qcommon_vm_armv7l_sources", f"{ENGINE_ROOT}/qcommon", ["vm_armv7l.c"], []),
+    ("qcommon_vm_powerpc_sources", f"{ENGINE_ROOT}/qcommon", ["vm_powerpc.c"], []),
+    ("renderer_common_sources", f"{ENGINE_ROOT}/renderercommon", ["*.c"], []),
+    ("renderer_gl_sources", f"{ENGINE_ROOT}/renderer", ["*.c"], []),
+    ("renderer2_sources", f"{ENGINE_ROOT}/renderer2", ["*.c"], ["stringify.c"]),
+    ("renderer_vk_sources", f"{ENGINE_ROOT}/renderervk", ["*.c"], ["bin2hex.c"]),
+    ("server_sources", f"{ENGINE_ROOT}/server", ["*.c"], ["sv_rankings.c"]),
+    ("unix_core_sources", f"{ENGINE_ROOT}/unix", ["unix_main.c", "unix_shared.c", "linux_signals.c"], []),
+    ("sdl_ui_sources", f"{ENGINE_ROOT}/sdl", ["*.c"], []),
+    ("win32_core_sources", f"{ENGINE_ROOT}/win32", ["win_main.c", "win_shared.c", "win_syscon.c"], []),
     (
         "win32_ui_sources",
-        "code/win32",
+        f"{ENGINE_ROOT}/win32",
         ["win_gamma.c", "win_glimp.c", "win_input.c", "win_minimize.c", "win_snd.c", "win_wndproc.c"],
         [],
     ),
-    ("win32_qgl_sources", "code/win32", ["win_qgl.c"], []),
-    ("win32_qvk_sources", "code/win32", ["win_qvk.c"], []),
+    ("win32_qgl_sources", f"{ENGINE_ROOT}/win32", ["win_qgl.c"], []),
+    ("win32_qvk_sources", f"{ENGINE_ROOT}/win32", ["win_qvk.c"], []),
 ]
 
 FILE_LIST_GROUPS = [
-    ("renderer_shared_aux_sources", ["code/qcommon/puff.c", "code/qcommon/q_math.c", "code/qcommon/q_shared.c"]),
+    ("renderer_shared_aux_sources", [f"{ENGINE_ROOT}/qcommon/puff.c", f"{ENGINE_ROOT}/qcommon/q_math.c", f"{ENGINE_ROOT}/qcommon/q_shared.c"]),
 ]
 
 STRING_LIST_GROUPS = [
@@ -46,7 +47,7 @@ STRING_LIST_GROUPS = [
         "renderer2_glsl_sources",
         sorted(
             Path(os.path.relpath(path, ROOT)).as_posix()
-            for path in (ROOT / "code" / "renderer2" / "glsl").glob("*.glsl")
+            for path in (ROOT / "src" / "engine" / "renderer2" / "glsl").glob("*.glsl")
         ),
     ),
 ]

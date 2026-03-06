@@ -1,5 +1,10 @@
 project('libjpeg', 'c', version : 'vendored', license : 'IJG')
 
+libjpeg_c_args = []
+if host_machine.system() == 'windows'
+  libjpeg_c_args += ['-D_CRT_SECURE_NO_WARNINGS']
+endif
+
 libjpeg_sources = files(
   'upstream/jaricom.c',
   'upstream/jcapimin.c',
@@ -55,6 +60,7 @@ libjpeg_lib = static_library(
   'q3vibe_vendor_jpeg',
   libjpeg_sources,
   include_directories : libjpeg_includes,
+  c_args : libjpeg_c_args,
 )
 
 libjpeg_dep = declare_dependency(

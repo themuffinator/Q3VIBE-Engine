@@ -1,5 +1,10 @@
 project('libvorbis', 'c', version : 'vendored', license : 'BSD-3-Clause')
 
+vorbis_c_args = []
+if host_machine.system() == 'windows'
+  vorbis_c_args += ['-D_CRT_SECURE_NO_WARNINGS']
+endif
+
 ogg_dep = dependency('ogg', fallback : ['ogg', 'ogg_dep'], required : true)
 
 vorbis_sources = files(
@@ -35,6 +40,7 @@ vorbis_lib = static_library(
   'q3vibe_vendor_vorbis',
   vorbis_sources,
   include_directories : vorbis_includes,
+  c_args : vorbis_c_args,
   dependencies : [ogg_dep],
 )
 

@@ -47,3 +47,17 @@ option(
   value : 'opengl',
   description : 'Default renderer selected by cl_renderer on first run.',
 )
+
+option(
+  'build_game_modules',
+  type : 'boolean',
+  value : true,
+  description : 'Build native game module sets alongside the engine.',
+)
+
+option(
+  'build_baseq3a',
+  type : 'boolean',
+  value : true,
+  description : 'Build the vendored baseq3a qagame/cgame/ui native modules into build/baseq3a/.',
+)

@@ -28,6 +28,12 @@ Supported build contract:
 - Windows x86_64 uses the native Win32 platform layer.
 - Linux x86_64 uses the SDL platform layer.
 - macOS x86_64 and aarch64 are first-class Meson targets through the SDL platform layer and are expected to stay green in CI.
+- Native game modules are built through Meson as `baseq3a/qagame*`, `baseq3a/cgame*`, and `baseq3a/ui*` by default.
+
+Build toggles:
+
+- `-Dbuild_game_modules=false` disables all native game-module builds.
+- `-Dbuild_baseq3a=false` disables the vendored `baseq3a` game-module set while keeping the engine build unchanged.
 
 ### Windows x86_64
 
@@ -51,6 +57,9 @@ Outputs:
 - `build/windows-clangcl-debug/quake3e.ded.x64.exe`
 - `build/windows-clangcl-debug/quake3e_opengl_x86_64.dll`
 - `build/windows-clangcl-debug/quake3e_vulkan_x86_64.dll`
+- `build/windows-clangcl-debug/baseq3a/qagamex86_64.dll`
+- `build/windows-clangcl-debug/baseq3a/cgamex86_64.dll`
+- `build/windows-clangcl-debug/baseq3a/uix86_64.dll`
 
 ### Linux x86_64
 
@@ -76,6 +85,9 @@ Outputs:
 - `build/linux-debug/quake3e.ded.x64`
 - `build/linux-debug/quake3e_opengl_x86_64.so`
 - `build/linux-debug/quake3e_vulkan_x86_64.so`
+- `build/linux-debug/baseq3a/qagamex86_64.so`
+- `build/linux-debug/baseq3a/cgamex86_64.so`
+- `build/linux-debug/baseq3a/uix86_64.so`
 
 ### macOS
 
@@ -99,10 +111,15 @@ Expected outputs:
 
 - Intel macOS: `quake3e.x86_64`, `quake3e.ded.x86_64`, `quake3e_opengl_x86_64.dylib`, `quake3e_vulkan_x86_64.dylib`
 - Apple Silicon macOS: `quake3e.aarch64`, `quake3e.ded.aarch64`, `quake3e_opengl_aarch64.dylib`, `quake3e_vulkan_aarch64.dylib`
+- `build/macos-*/baseq3a/qagamex86_64.dylib` or `build/macos-*/baseq3a/qagameaarch64.dylib`
+- `build/macos-*/baseq3a/cgamex86_64.dylib` or `build/macos-*/baseq3a/cgameaarch64.dylib`
+- `build/macos-*/baseq3a/uix86_64.dylib` or `build/macos-*/baseq3a/uiaarch64.dylib`
 
 ## Repository Layout
 
-- `code/`: engine, renderer, platform, and game-facing source imported from Quake3e.
+- `src/engine/`: engine, renderer, platform, and Quake3e-facing source tree.
+- `src/game/`: vendored `baseq3a` gamecode plus its upstream docs, assets, and license files.
+- `baseq3a/`: Meson staging directory that mirrors the built native `baseq3a` modules into `build/<config>/baseq3a/`.
 - `meson.build`, `meson.options`: active top-level build definition.
 - `subprojects/`: Meson dependency wrappers and vendored external dependency trees for `libjpeg`, `libogg`, `libvorbis`, `libcurl`, and SDL3, following the same fallback-driven layout used in `../WORR/`.
 - `subprojects/sdl3/`: the active SDL3 Meson wrapper.
